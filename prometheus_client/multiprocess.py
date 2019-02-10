@@ -10,7 +10,7 @@ import os
 from .metrics_core import Metric
 from .mmap_dict import MmapedDict
 from .samples import Sample
-from .utils import floatToGoString
+from .utils import float_to_go_string
 
 
 class MultiProcessCollector(object):
@@ -102,7 +102,7 @@ class MultiProcessCollector(object):
                     for bucket, value in sorted(values.items()):
                         sample_key = (
                             metric.name + '_bucket',
-                            labels + (('le', floatToGoString(bucket)), ),
+                            labels + (('le', float_to_go_string(bucket)),),
                         )
                         if accumulate:
                             acc += value

@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import math
-import sys
+import unittest
 
 from prometheus_client.core import (
     CollectorRegistry, CounterMetricFamily, Exemplar,
@@ -11,13 +11,6 @@ from prometheus_client.core import (
 )
 from prometheus_client.openmetrics.exposition import generate_latest
 from prometheus_client.openmetrics.parser import text_string_to_metric_families
-
-if sys.version_info < (2, 7):
-    # We need the skip decorators from unittest2 on Python 2.6.
-    import unittest2 as unittest
-else:
-    import unittest
-
 
 
 class TestParse(unittest.TestCase):
@@ -379,7 +372,6 @@ b_total 2 1234567890
         b.add_metric([], 2, timestamp=Timestamp(1234567890, 0))
         self.assertEqual([a, b], list(families))
 
-    @unittest.skipIf(sys.version_info < (2, 7), "Test requires Python 2.7+.")
     def test_roundtrip(self):
         text = """# HELP go_gc_duration_seconds A summary of the GC invocation durations.
 # TYPE go_gc_duration_seconds summary
@@ -588,7 +580,6 @@ foo_created 1.520430000123e+09
             with self.assertRaises(ValueError):
                 list(text_string_to_metric_families(case))
 
-    @unittest.skipIf(sys.version_info < (2, 7), "float repr changed from 2.6 to 2.7")
     def test_invalid_float_input(self):
         for case in [
                 # Bad histograms.

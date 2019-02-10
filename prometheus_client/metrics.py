@@ -10,7 +10,7 @@ from .metrics_core import (
     RESERVED_METRIC_LABEL_NAME_RE,
 )
 from .registry import REGISTRY
-from .utils import floatToGoString, INF
+from .utils import float_to_go_string, INF
 
 if sys.version_info > (3,):
     unicode = str
@@ -518,7 +518,7 @@ class Histogram(MetricWrapperBase):
                 self._name,
                 self._name + '_bucket',
                 bucket_labelnames,
-                self._labelvalues + (floatToGoString(b),))
+                self._labelvalues + (float_to_go_string(b),))
             )
 
     def observe(self, amount):
@@ -541,7 +541,7 @@ class Histogram(MetricWrapperBase):
         acc = 0
         for i, bound in enumerate(self._upper_bounds):
             acc += self._buckets[i].get()
-            samples.append(('_bucket', {'le': floatToGoString(bound)}, acc))
+            samples.append(('_bucket', {'le': float_to_go_string(bound)}, acc))
         samples.append(('_count', {}, acc))
         samples.append(('_sum', {}, self._sum.get()))
         samples.append(('_created', {}, self._created))

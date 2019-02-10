@@ -4,7 +4,7 @@ INF = float("inf")
 MINUS_INF = float("-inf")
 
 
-def floatToGoString(d):
+def float_to_go_string(d):
     d = float(d)
     if d == INF:
         return '+Inf'

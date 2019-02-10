@@ -16,11 +16,7 @@ from prometheus_client.exposition import (
 )
 from prometheus_client import core
 
-if sys.version_info < (2, 7):
-    # We need the skip decorators from unittest2 on Python 2.6.
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 
 try:
@@ -85,7 +81,6 @@ ss_sum{a="c",b="d"} 17.0
 ss_created{a="c",b="d"} 123.456
 ''', generate_latest(self.registry))
 
-    @unittest.skipIf(sys.version_info < (2, 7), "Test requires Python 2.7+.")
     def test_histogram(self):
         s = Histogram('hh', 'A histogram', registry=self.registry)
         s.observe(0.05)

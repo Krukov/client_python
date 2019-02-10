@@ -6,13 +6,12 @@ import base64
 from contextlib import closing
 import os
 import socket
-import sys
 import threading
 from wsgiref.simple_server import make_server, WSGIRequestHandler
 
 from .openmetrics import exposition as openmetrics
 from .registry import REGISTRY
-from .utils import floatToGoString
+from .utils import float_to_go_string
 
 try:
     from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
@@ -30,8 +29,6 @@ except ImportError:
 
 CONTENT_TYPE_LATEST = str('text/plain; version=0.0.4; charset=utf-8')
 '''Content type of the latest text format'''
-
-PYTHON26_OR_OLDER = sys.version_info < (2, 7)
 
 
 def make_wsgi_app(registry=REGISTRY):
@@ -83,7 +80,7 @@ def generate_latest(registry=REGISTRY):
             # Convert to milliseconds.
             timestamp = ' {0:d}'.format(int(float(s.timestamp) * 1000))
         return '{0}{1} {2}{3}\n'.format(
-            s.name, labelstr, floatToGoString(s.value), timestamp)
+            s.name, labelstr, float_to_go_string(s.value), timestamp)
 
     output = []
     for metric in registry.collect():
@@ -338,7 +335,7 @@ def delete_from_gateway(
 
 def _use_gateway(method, gateway, job, registry, grouping_key, timeout, handler):
     gateway_url = urlparse(gateway)
-    if not gateway_url.scheme or (PYTHON26_OR_OLDER and gateway_url.scheme not in ['http', 'https']):
+    if not gateway_url.scheme:
         gateway = 'http://{0}'.format(gateway)
     url = '{0}/metrics/job/{1}'.format(gateway, quote_plus(job))
 

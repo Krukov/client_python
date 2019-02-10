@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 import glob
 import os
 import shutil
-import sys
+import unittest
 import tempfile
 
-from prometheus_client import core, mmap_dict, values
+from prometheus_client import mmap_dict, values
 from prometheus_client.core import (
     CollectorRegistry, Counter, Gauge, Histogram, Sample, Summary,
 )
@@ -14,14 +14,6 @@ from prometheus_client.multiprocess import (
     mark_process_dead, MultiProcessCollector,
 )
 from prometheus_client.values import MultiProcessValue, MutexValue
-
-if sys.version_info < (2, 7):
-    # We need the skip decorators from unittest2 on Python 2.6.
-    import unittest2 as unittest
-else:
-    import unittest
-
-
 
 
 class TestMultiProcess(unittest.TestCase):
@@ -166,7 +158,6 @@ class TestMultiProcess(unittest.TestCase):
         self.assertEqual(files(), ['counter_0.db', 'counter_1.db'])
 
 
-    @unittest.skipIf(sys.version_info < (2, 7), "Test requires Python 2.7+.")
     def test_collect(self):
         pid = 0
         values.ValueClass = MultiProcessValue(lambda: pid)
@@ -227,7 +218,6 @@ class TestMultiProcess(unittest.TestCase):
 
         self.assertEqual(metrics['h'].samples, expected_histogram)
 
-    @unittest.skipIf(sys.version_info < (2, 7), "Test requires Python 2.7+.")
     def test_merge_no_accumulate(self):
         pid = 0
         values.ValueClass = MultiProcessValue(lambda: pid)
